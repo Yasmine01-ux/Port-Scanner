@@ -1,83 +1,111 @@
 # Port Scanner - Nmap Simplifié
 
 ## Description
-Ce projet est un **scanner de ports simplifié** inspiré de Nmap. Il permet d'analyser les ports ouverts sur une machine cible (hôte) en utilisant les protocoles **TCP** et **UDP**. Le programme utilise des **threads** pour accélérer le processus de scan et peut également détecter les **services** associés aux ports ouverts.
+Ce projet est un scanner de ports léger inspiré de Nmap. Il permet de vérifier les ports ouverts d’une cible, de détecter les services associés, de générer un rapport JSON et de tester plusieurs méthodes de scan TCP.
 
-### Fonctionnalités principales :
-- **Scan TCP et UDP** : Vérifie si un port est ouvert ou fermé.
-- **Détection de services** : Identifie les services associés aux ports TCP ouverts.
-- **Multithreading** : Exécution rapide grâce au traitement parallèle.
-- **Affichage coloré** : Utilise la bibliothèque **Colorama** pour des messages colorés dans le terminal.
+---
+
+## Fonctionnalités
+- Scan TCP et UDP
+- Support des plages et listes de ports : `20-80`, `22,80,443`, `443-444`
+- Détection des services via `socket.getservbyport`
+- Export des résultats au format JSON
+- Détection OS estimée par TTL ICMP
+- Méthodes de scan TCP : `connect`, `syn`, `ack`
+- Multithreading pour accélérer le scan
+- Affichage coloré dans le terminal
 
 ---
 
 ## Prérequis
-### Bibliothèques nécessaires :
-1. **Python 3.11 ou supérieur**
-2. Modules Python :
-   - **socket** (inclus par défaut)
-   - **threading** (inclus par défaut)
-   - **argparse** (inclus par défaut)
-   - **scapy** :
-     ```bash
-     pip install scapy
-     ```
-   - **colorama** :
-     ```bash
-     pip install colorama
-     ```
+Installez les dépendances du projet :
+
+```bash
+python3 -m pip install -r requirements.txt
+```
+
+Le fichier [requirements.txt](requirements.txt) contient :
+- `scapy`
+- `colorama`
 
 ---
 
-## Instructions d'exécution
+## Utilisation
 
-### Commande de base :
+### Commande de base
 ```bash
-python3.11 port_scanner.py <hôte> -p <ports> -t <protocole>
+python3 port_scanner.py <hote> -p <ports> -t <tcp|udp>
 ```
 
-### Exemples :
-1. Scanner les ports **22, 80 et 443** sur le protocole **TCP** :
+### Exemples
+1. Scan TCP classique sur une plage de ports :
 ```bash
-python3.11 port_scanner.py 192.168.1.1 -p 22-443 -t tcp
+python3 port_scanner.py 192.168.1.1 -p 20-80 -t tcp
 ```
 
-2. Scanner les ports de **20 à 80** sur le protocole **UDP** :
+2. Scan TCP avec une liste de ports :
 ```bash
-python3.11 port_scanner.py 192.168.1.1 -p 20-80 -t udp
+python3 port_scanner.py 192.168.1.1 -p "22,80,443" -t tcp
 ```
 
-3. Obtenir de l'aide :
+3. Scan UDP :
 ```bash
-python3.11 port_scanner.py -h
+python3 port_scanner.py 192.168.1.1 -p 20-80 -t udp
+```
+
+4. Rapport JSON dans la console :
+```bash
+python3 port_scanner.py 192.168.1.1 -p "22,80,443" -t tcp --json
+```
+
+5. Rapport JSON sauvegardé dans un fichier :
+```bash
+python3 port_scanner.py 192.168.1.1 -p "22,80,443" -t tcp --json --output scan.json
+```
+
+6. Détection OS estimée :
+```bash
+python3 port_scanner.py 192.168.1.1 -p 80 -t tcp --os-detect
+```
+
+7. Scan SYN :
+```bash
+python3 port_scanner.py 192.168.1.1 -p 20-80 -t tcp --scan-method syn
+```
+
+8. Scan ACK :
+```bash
+python3 port_scanner.py 192.168.1.1 -p 20-80 -t tcp --scan-method ack
+```
+
+9. Aide :
+```bash
+python3 port_scanner.py -h
 ```
 
 ---
 
-## Améliorations possibles
-Voici quelques améliorations suggérées pour enrichir le projet :
+## Exemple de sortie
+```text
+Scanning des ports de 192.168.1.1 (20-80) sur le protocole TCP
+[TCP] Port 80 ouvert, Service: http
 
-1. **Support des listes de ports spécifiques** :
-   - Actuellement, seules les plages de ports sont supportées. Ajouter la gestion des listes de ports (par ex. `22,80,443`).
-
-2. **Détection de services UDP** :
-   - Implémenter un mécanisme similaire à TCP pour identifier les services UDP.
-
-3. **Rapport au format CSV ou JSON** :
-   - Exporter les résultats des scans dans un fichier pour faciliter leur analyse ultérieure.
-
-4. **Détection des systèmes d'exploitation** :
-   - Ajouter des fonctionnalités d'analyse pour estimer le système d'exploitation de l'hôte.
-
-5. **Scan avancé** :
-   - Implémenter des techniques avancées comme les scans SYN ou ACK pour une analyse plus discrète.
-
-6. **Interface graphique** :
-   - Créer une application avec une interface utilisateur pour une utilisation plus conviviale.
+Ports ouverts sur 192.168.1.1:
+TCP 80: http
+```
 
 ---
 
-## Notes importantes
-- Ce scanner est conçu pour des **tests éthiques** uniquement.
-- Utilisez-le sur vos propres réseaux ou avec une **autorisation préalable**.
-- Tout usage abusif peut être **illégal** et entraîner des poursuites judiciaires.
+## Notes de sécurité
+- Ce projet est conçu uniquement pour des tests éthiques et des environnements autorisés.
+- N’utilisez pas cet outil sur des systèmes sans permission explicite.
+- Les scans réseau peuvent être détectés et peuvent être illégaux hors de votre propre environnement.
+
+---
+
+## Développements futurs possibles
+- Interface graphique plus conviviale
+- Rapport CSV/HTML supplémentaire
+- Détection OS plus précise
+- Scan plus discret et filtré
+- Analyse approfondie des services UDP
