@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.coverage
+
+# Environnements virtuels
+.venv/
+venv/
+ENV/
+
+# Secrets et fichiers locaux
+.env
+*.log
+
+# Rapports générés (garder l'exemple versionné)
+scan-report.json
+scan.json
+result.json

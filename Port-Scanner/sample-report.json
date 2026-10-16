@@ -1,0 +1,12 @@
+[
+  {
+    "port": 22,
+    "service": "ssh",
+    "protocol": "TCP"
+  },
+  {
+    "port": 80,
+    "service": "http",
+    "protocol": "TCP"
+  }
+]
